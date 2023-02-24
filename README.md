@@ -1,2 +1,2 @@
 # ATM-PROJECK-2-TEAM-2
-ATM Project with PostgreSQL
+Bank Management System Project using PostgreSQL
