@@ -233,6 +233,7 @@ class InsertPage(LoginPage,QMainWindow):
             self.insert_money.balance3_label.setText("Please enter an number !!!")
 
         
+        
 
     def donus(self):
         self.openaccountpage = AccountPage()
