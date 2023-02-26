@@ -35,7 +35,7 @@ class ATM_Table_Create():
                     email varchar(255) NOT NULL,
                     password varchar(20) NOT NULL,
                     create_date date NOT NULL DEFAULT CURRENT_DATE  ,
-                    login_log varchar(255) DEFAULT CURRENT_DATE,
+                    login_log timestamp without time zone),
                     withdraw_money money DEFAULT '00000',
                     insert_money money DEFAULT '00000',
                     transfer_money money DEFAULT '00000',
