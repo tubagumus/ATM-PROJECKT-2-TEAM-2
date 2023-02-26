@@ -5,8 +5,8 @@ This is an Atm app that can hold users information and allows them make money ac
 
 
 
-
-
+import random
+import psycopg2
 from PyQt5.QtWidgets import *
 from Ui_account import Ui_accountScreen
 from Ui_balance import Ui_balanceScreen 
@@ -448,61 +448,77 @@ class AccounAdminPage(QWidget):
         self.accounderForm= Ui_accountAdmin()
         self.accounderForm.setupUi(self)
         self.accounderForm.pushButtonReturn.clicked.connect(self.return_admin_choice)
-        self.accounderForm.pushButtonSuffix.clicked.connect(self.write_json)
+        self.accounderForm.pushButtonSuffix.clicked.connect(self.write_db)
         # self.accounderForm.pushButtonSuffix.clicked.connect(self.accoundCread)
         self.accounderForm.label.hide()
 
 
-    def accoundCread(self):
-        with open(os.path.join(__location__, 'data2.json')) as f:
-            data = json.load(f)
-            heades = data["customers"]
-            row_index = 0
-            for i in heades:
+    # def accoundCread(self):  # bu adımda qt üzerinden bilgiler alınır
+        # pass
+         
+        # with open(os.path.join(__location__, 'data2.json')) as f:
+        #     data = json.load(f)
+        #     heades = data["customers"]
+        #     row_index = 0
+        #     for i in heades:
             #     for k in i :  # k benim sozlukteki key dir. i ise listedeki sozluktur.
-                self.accounderForm.tableWidget.setItem(0,0,QTableWidgetItem(str(len(heades)+1)))  # i[k] bana sozlukteki key degerini veriyor.
-                self.accounderForm.tableWidget.setItem(0,1,QTableWidgetItem(i["name"]))  # i[k] bana sozlukteki key degerini veriyor.
-                self.accounderForm.tableWidget.setItem(0,2,QTableWidgetItem(i["surname"]))  # i[k] bana sozlukteki key degerini veriyor.
-                self.accounderForm.tableWidget.setItem(0,5,QTableWidgetItem(str(i["balance"])))  # i[k] bana sozlukteki key degerini veriyor.
-                self.accounderForm.tableWidget.setItem(0,3,QTableWidgetItem(i["e-mail"]))  # i[k] bana sozlukteki key degerini veriyor.
-                self.accounderForm.tableWidget.setItem(0,4,QTableWidgetItem(str(i["tax-number"])))  # i[k] bana sozlukteki key degerini veriyor.
-                self.accounderForm.tableWidget.setItem(0,6,QTableWidgetItem(i["password"]))  # i[k] bana sozlukteki key degerini veriyor.
+                # self.accounderForm.tableWidget.setItem(0,0,QTableWidgetItem(str(len(heades)+1)))  # i[k] bana sozlukteki key degerini veriyor.
+                # self.accounderForm.tableWidget.setItem(0,1,QTableWidgetItem(i["name"]))  # i[k] bana sozlukteki key degerini veriyor.
+                # self.accounderForm.tableWidget.setItem(0,2,QTableWidgetItem(i["surname"]))  # i[k] bana sozlukteki key degerini veriyor.
+                # self.accounderForm.tableWidget.setItem(0,5,QTableWidgetItem(str(i["balance"])))  # i[k] bana sozlukteki key degerini veriyor.
+                # self.accounderForm.tableWidget.setItem(0,3,QTableWidgetItem(i["e-mail"]))  # i[k] bana sozlukteki key degerini veriyor.
+                # self.accounderForm.tableWidget.setItem(0,4,QTableWidgetItem(str(i["tax-number"])))  # i[k] bana sozlukteki key degerini veriyor.
+                # self.accounderForm.tableWidget.setItem(0,6,QTableWidgetItem(i["password"]))  # i[k] bana sozlukteki key degerini veriyor.
                 
 
 
 
 
-    def write_json(self):
+    def write_db(self):  # bu aşamada database yazılıyr
+
+        conn = psycopg2.connect("dbname = postgres user= postgres password=1234")  #herhangi bir dbname = ... olmasa da yapıyor 
+        cur = conn.cursor()
+        cur.execute('INSERT INTO forimportcsv VALUES(%s,%s,%s,%s,%s,%s,%s)',(self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditBalans.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditPassword.text()))
+        # cur.execute('INSERT INTO forimportcsv VALUES(%s,%s,%s)',(self.accounderForm.lineEditName.text(),self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditPassword.text()))
+
+        # cur .execute('INSERT INTO accountList VALUES(%s,%s,%s,%s,%s,%s)',(154758,"ayse","yasa","ayseyasa@gmail.com",2487550, 58247))
         
-        with open(os.path.join(__location__, 'data2.json')) as json_file:
-            data = json.load(json_file)
-            temp = data["customers"]
-            y = {
-            "id": len(temp)+100001,
-            "name": self.accounderForm.lineEditName.text(),
-            "surname":self.accounderForm.lineEditSurname.text(),
-            "balance":int(self.accounderForm.lineEditBalans.text()),
-            "e-mail" : self.accounderForm.lineEditEmail.text(),
-            "tax-number" :int(self.accounderForm.lineEditTax.text()),
-            "password" : self.accounderForm.lineEditPassword.text() ,
-            "login_log" : [],
-            "money_activities" : [],
-            "register_log" : f"Customer {len(temp)+100001} registered at {datetime.datetime.now()}"           
-            }
-            temp.append(y)
-        try:
-            assert len(self.accounderForm.lineEditPassword.text())>=6
-            with open(os.path.join(__location__, 'data2.json'),'w') as f:
-                json.dump(data , f, indent=4)
+        cur.close()
+        conn.commit() #onay gibi 
+        conn.close() 
+
+
+
+        
+        # with open(os.path.join(__location__, 'data2.json')) as json_file:
+        #     data = json.load(json_file)
+        #     temp = data["customers"]
+        #     y = {
+        #     "id": len(temp)+100001,
+        #     "name": self.accounderForm.lineEditName.text(),
+        #     "surname":self.accounderForm.lineEditSurname.text(),
+        #     "balance":int(self.accounderForm.lineEditBalans.text()),
+        #     "e-mail" : self.accounderForm.lineEditEmail.text(),
+        #     "tax-number" :int(self.accounderForm.lineEditTax.text()),
+        #     "password" : self.accounderForm.lineEditPassword.text() ,
+        #     "login_log" : [],
+        #     "money_activities" : [],
+        #     "register_log" : f"Customer {len(temp)+100001} registered at {datetime.datetime.now()}"           
+        #     }
+        #     temp.append(y)
+        # try:
+        #     assert len(self.accounderForm.lineEditPassword.text())>=6
+        #     with open(os.path.join(__location__, 'data2.json'),'w') as f:
+        #         json.dump(data , f, indent=4)
             
-            self.accounderForm.label.setText("Account is created succesfully !")
-            self.accounderForm.label.show()
-            self.accoundCread()
+        #     self.accounderForm.label.setText("Account is created succesfully !")
+        #     self.accounderForm.label.show()
+        #     self.accoundCread()
 
             
-        except :
-            print("password must be at least 6 digits")
-            self.accounderForm.label.show()
+        # except :
+        #     print("password must be at least 6 digits")
+        #     self.accounderForm.label.show()
 
 
     def return_admin_choice(self):

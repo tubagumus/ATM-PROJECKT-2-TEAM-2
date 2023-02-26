@@ -1,0 +1,23 @@
+# conn = psycopg2.connect("dbname = postgres user= postgres password=1234")  #herhangi bir dbname = ... olmasa da yapıyor 
+# cur = conn.cursor()
+# command = '''create table againtablecreate2
+# (
+#             id integer primary key,
+#             ad varchar (20) NOT NULL,
+#             marka varchar(20),
+#             stok integer,
+#             katagori varchar(20)
+# )'''
+# cur.execute(command)
+# cur.close()
+# conn.commit() #onay gibi 
+# conn.close()  
+
+
+
+conn = psycopg2.connect("dbname = postgres user= postgres password=1234")  #herhangi bir dbname = ... olmasa da yapıyor 
+cur = conn.cursor()
+cur .execute('INSERT INTO forimportcsv VALUES(%s,%s,%s)',("ayse", 50, 58))
+cur.close()
+conn.commit() #onay gibi 
+conn.close() 
