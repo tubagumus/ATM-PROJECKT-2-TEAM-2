@@ -478,7 +478,7 @@ class AccounAdminPage(QWidget):
 
         conn = psycopg2.connect("dbname = postgres user= postgres password=1234")  #herhangi bir dbname = ... olmasa da yapıyor 
         cur = conn.cursor()
-        cur.execute('INSERT INTO tryTable VALUES(%s,%s,%s,%s,%s,%s,%s)',(self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditBalans.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditPassword.text()))
+        cur.execute('INSERT INTO forimportcsv VALUES(%s,%s,%s,%s,%s,%s,%s)',(self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditBalans.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditPassword.text()))
         # cur.execute('INSERT INTO forimportcsv VALUES(%s,%s,%s)',(self.accounderForm.lineEditName.text(),self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditPassword.text()))
 
         # cur .execute('INSERT INTO accountList VALUES(%s,%s,%s,%s,%s,%s)',(154758,"ayse","yasa","ayseyasa@gmail.com",2487550, 58247))
