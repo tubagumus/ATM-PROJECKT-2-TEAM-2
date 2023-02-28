@@ -24,6 +24,8 @@ from Ui_statement import Ui_statementScreen
 import datetime
 import time
 
+from Query_db import*
+
 import json
 import os
 
@@ -181,10 +183,19 @@ class BalancePage(QMainWindow):
         self.checkbalance = Ui_balanceScreen()
         self.checkbalance.setupUi(self)
         self.checkbalance.return1_button.clicked.connect(self.donus)
-        with open(os.path.join(__location__, 'data2.json')) as f:
-            self.data = json.load(f)
-            self.users = self.data["customers"]
-            self.checkbalance.balance_label.setText(str(self.users[int(user)-1]["balance"]) + " €")
+
+        db = Query_open()
+        tbl_balance = db.Query_tbl_1('balance', 'tblcustomer')
+        for b in tbl_balance:
+            #self.checkbalance.balance_label.setText(int('balance') + " €") #emin degilim bu kod dogru mu,
+            print(b) 
+
+
+
+        # with open(os.path.join(__location__, 'data2.json')) as f:
+        #     self.data = json.load(f)
+        #     self.users = self.data["customers"]
+        #     self.checkbalance.balance_label.setText(str(self.users[int(user)-1]["balance"]) + " €")
 
     def donus(self):
         self.openaccountpage = AccountPage()
@@ -299,6 +310,16 @@ class StatementPage(LoginPage,QMainWindow):
         self.statement_user.return4_button.clicked.connect(self.donus)
         self.statement_user.textBrowser.hide()
         self.statement_user.textBrowser_2.hide()
+
+        db = Query_open()
+        tbl_log = db.Query_tbl_1('login_log','tblcustomer')
+        for log in tbl_log:
+            print(log)
+
+        tbl_balance = db.Query_tbl_1('balance', 'tblcustomer')
+        for b in tbl_balance:
+            
+            print(b) 
         
         # with open(os.path.join(__location__, 'data2.json')) as f:
         #     self.data = json.load(f)

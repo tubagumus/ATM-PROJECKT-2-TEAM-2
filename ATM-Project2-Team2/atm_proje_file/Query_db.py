@@ -240,3 +240,20 @@ for i in tbl_listem:
 # v= (1,'Samil','Kaygan','Kaygan@gmail.com','654321')
 # x= {'customer_id':6,'first_name':'Huriye','last_name':'Can','email': 'Can@gmail.com'}
 # qr.Update_tbl('tblcustomer',v,x)
+
+db = Query_open()
+tbl_balance = db.Query_tbl_1('balance', 'tblcustomer')
+for b in tbl_balance:
+    print(b)
+
+
+
+db = Query_open()
+tbl_log = db.Query_tbl_1('login_log','tblcustomer')
+for log in tbl_log:
+    print(log)
+
+db = Query_open()
+tbl_create = db. Query_tbl_1('create_date', 'tblcustomer')
+for  cr in tbl_create:
+    print(cr)
