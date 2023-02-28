@@ -57,23 +57,40 @@ class LoginPage(QMainWindow):
 
     def enter(self):
         global user,password
+       
         try :
-            self.id = int(self.loginform.idnum_edit.text())-100000
+            self.id = int(self.loginform.idnum_edit.text())
             self.password = self.loginform.password_edit.text()
         
-            user = str(self.id)
+            user = int(self.id)
             password = self.password
-            fileloc = os.getcwd()
+           
+
+            db= Query_open()
             
-            with open(os.path.join(__location__, 'data2.json')) as f:
-                self.data = json.load(f)
-                self.users = self.data["customers"]
+            tbl_listem=db.Query_tbl_1('password', 'tblcustomer')
+            tbl_list=db.Query_tbl_1('customer_id', 'tblcustomer')
+            for i in tbl_listem:
+               print(i)
+               if i == self.password:
+                    
+                    for k in tbl_list:
+                        print(k)
+                        if k == self.id:
+                            self.hide()
+                            self.openaccountpage.show()
+                            self.login_log()
+            # fileloc = os.getcwd()
             
-                if self.users[int(user)-1]["id"] == int(user)+100000:
-                    if str(self.users[int(user)-1]["password"]) == str(password):
-                        self.hide()
-                        self.openaccountpage.show()
-                        self.login_log()
+            # with open(os.path.join(__location__, 'data2.json')) as f:
+            #     self.data = json.load(f)
+            #     self.users = self.data["customers"]
+            
+            #     if self.users[int(user)-1]["id"] == int(user)+100000:
+            #         if str(self.users[int(user)-1]["password"]) == str(password):
+            #             self.hide()
+            #             self.openaccountpage.show()
+            #             self.login_log()
         except :
             self.loginform.id_label2.show()
             self.loginform.id_label2.setText("Wrong name or password !!!")
@@ -448,7 +465,7 @@ class Changepage(QMainWindow):
 
 
 class Activitypage(QMainWindow):
-    def __init__(self) -> None:
+    def __init__(self) :
         super().__init__()
         self.activityform = Ui_MainWindow()
         self.activityform.setupUi(self)
@@ -462,7 +479,7 @@ class Activitypage(QMainWindow):
 
 class AccounAdminPage(QWidget):  
     
-    def __init__(self) -> None:
+    def __init__(self) :
         super().__init__()
         
         # ornek ve ana modul calistiriliyor

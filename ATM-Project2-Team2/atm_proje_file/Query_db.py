@@ -15,7 +15,7 @@ from psycopg2 import connect, extensions
 
 
 class ATM_Create():
-    def __init__(self) -> None:  
+    def __init__(self) :  
 
         self.hostname= 'localhost'
         self.username = 'postgres'
@@ -141,7 +141,7 @@ class ATM_Create():
 
 class Query_open():
     
-    def __init__(self) -> None: 
+    def __init__(self) : 
         
         self.hostname= 'localhost'
         self.database= 'atm_db'

@@ -134,7 +134,7 @@ class Ui_MainWindow2(object):
         self.return2_button.setIconSize(QtCore.QSize(50, 50))
         self.return2_button.setObjectName("return2_button")
         
-           self.balance_label_id = QtWidgets.QLabel(self.centralwidget)
+        self.balance_label_id = QtWidgets.QLabel(self.centralwidget)
         self.balance_label_id.setGeometry(QtCore.QRect(10, 50, 191, 31))
         font = QtGui.QFont()
         font.setFamily("MS Shell Dlg 2")
