@@ -74,6 +74,7 @@ class LoginPage(QMainWindow):
             db= Query_open()
             
             tbl_listem=db.Query_tbl_1('password', 'tblcustomer')
+            
             db= Query_open()
             tbl_list=db.Query_tbl_1('customer_id', 'tblcustomer')
             
@@ -81,7 +82,8 @@ class LoginPage(QMainWindow):
             for i in range(len(tbl_listem)):
                 
                 if (tbl_listem[i][0]) == self.password and (tbl_list[i][0]== self.id):
-                    
+                    # db= Query_open()
+                    # db.cur.execute(f'INSERT INTO tblaccountaktivities (customer_id) VALUES({user})')
                     self.hide()
                     self.openaccountpage.show()
                 else :
@@ -226,6 +228,7 @@ class InsertPage(LoginPage,QMainWindow):
         db.Query_close()
         self.insert_money.balance2_label.setText(str(result[0][0]))
         self.insert_money.enter2_button.clicked.connect(self.add_money)
+        print(result[0][0])
             
         
 
@@ -243,13 +246,17 @@ class InsertPage(LoginPage,QMainWindow):
 
 
             db = Query_open()
-            db.command= f'UPDATE tblcustomer SET insert_money ={int(self.insert_money.insert_edit.text())}  WHERE customer_id = {user}'
-            db.cur.execute(db.command)
-            new_balance = int(self.insert_money.insert_edit.text())+ (result[0][0])
-
-            db.command= f'UPDATE tblcustomer SET balance ={new_balance}  WHERE customer_id = {user}'
             
-            db.cur.execute(db.command)
+           
+            # db.command= f'UPDATE tblaccountaktivities SET insert_money ={int(self.insert_money.insert_edit.text())}  WHERE customer_id = {user}'
+            
+            # db.cur.execute(db.command)
+            new_balance = int(self.insert_money.insert_edit.text())+ (result[0][0])
+            db.cur.execute(f'INSERT INTO tblaccountaktivities (customer_id,balance,insert_money) VALUES({user},{new_balance},{int(self.insert_money.insert_edit.text())}) ')
+            
+            db.cur.execute(f'UPDATE tblcustomer SET balance ={new_balance}  WHERE customer_id = {user}')
+            # db.cur.execute(f'UPDATE tblaccountaktivities SET balance ={new_balance}  WHERE customer_id = {user}')
+            
             
             db.Query_close()
 
@@ -260,29 +267,6 @@ class InsertPage(LoginPage,QMainWindow):
             db.Query_close()
             self.insert_money.balance2_label.setText(str(result[0][0]))
             
-
-
-            
-            # assert (int(self.insert_money.insert_edit.text())/1).is_integer()
-            # with open(os.path.join(__location__, 'data2.json')) as f:
-            #     self.data = json.load(f)
-            #     self.users = self.data["customers"]
-            #     self.data["customers"][int(user)-1]["balance"] += int(self.insert_money.insert_edit.text())
-            #     self.insert_money.balance2_label.setText(str(self.users[int(user)-1]["balance"]) + " €")
-            #     self.data["customers"][int(user)-1]["money_activities"].append(f"--Inserted {int(self.insert_money.insert_edit.text())} € at {datetime.datetime.now()}#")     
-        
-        
-            # with open(os.path.join(__location__, 'data2.json'),'w') as f:
-            #     json.dump(self.data , f, indent=4)
-            # self.insert_money.balance3_label.show()
-            # self.insert_money.balance3_label.setText("Inserted succesfully ")
-        # except :
-        
-        #     self.insert_money.balance3_label.show()
-        #     self.insert_money.balance3_label.setText("Please enter an number !!!")
-
-        
-        
 
     def donus(self):
         self.openaccountpage = AccountPage()
@@ -305,29 +289,39 @@ class WithdrawPage(LoginPage,QMainWindow):
         result =db.cur.fetchall()
         db.Query_close()
         self.withdraw_money.balance3_label.setText(str(result[0][0]))
+        
         self.withdraw_money.enter_button.clicked.connect(self.take_money)
 
                     
     def take_money(self):
+           
 
-            db = Query_open()
-            db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+        db = Query_open()
+        db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
 
-            db.cur.execute(db.command)
-            result =db.cur.fetchall()
-            db.Query_close()
-            self.withdraw_money.balance3_label.setText(str(result[0][0]))
+        db.cur.execute(db.command)
+        result =db.cur.fetchall()
+        db.Query_close()
+        self.withdraw_money.balance3_label.setText(str(result[0][0]))
+        if int(self.withdraw_money.withdraw_edit.text()) > result[0][0]:
             
+            self.withdraw_money.messsage2_button.setText("Insufficient Fund !!!")
+        elif  int(self.withdraw_money.withdraw_edit.text()) > 1000:
+            self.withdraw_money.messsage2_button.setText("Daily withdraw limit exceeded")
+
+        else :     
 
 
             db = Query_open()
             new_insert = int(self.withdraw_money.withdraw_edit.text())
-            db.command= f'UPDATE tblcustomer SET withdraw_money ={new_insert}  WHERE customer_id = {user}'
-            db.cur.execute(db.command)
+            # db.command= f'UPDATE tblaccountaktivities SET withdraw_money ={new_insert}  WHERE customer_id = {user}'
+            # db.cur.execute(db.command)
             new_balance2 = (result[0][0]) - int(self.withdraw_money.withdraw_edit.text())
             db.command= f'UPDATE tblcustomer SET balance ={new_balance2}  WHERE customer_id = {user}'
-            
             db.cur.execute(db.command)
+            db.cur.execute(f'INSERT INTO tblaccountaktivities (customer_id,balance,withdraw_money) VALUES({user},{new_balance2},{int(self.withdraw_money.withdraw_edit.text())}) ')
+            
+            
             db.Query_close()
 
             db = Query_open()
@@ -336,35 +330,9 @@ class WithdrawPage(LoginPage,QMainWindow):
             result =db.cur.fetchall()
             db.Query_close()
             self.withdraw_money.balance3_label.setText(str(result[0][0]))
+            self.withdraw_money.messsage2_button.setText("Succesfully withdrawed")
         
-        # try :
-        #     assert (int(self.withdraw_money.withdraw_edit.text())/1).is_integer()
-
-        #     if self.data["customers"][int(user)-1]["balance"]  >= int(self.withdraw_money.withdraw_edit.text()) :
-        #         self.withdraw_money.messsage2_button.setText("")
-        #         with open(os.path.join(__location__, 'data2.json')) as f:
-        #             self.data = json.load(f)
-        #             self.users = self.data["customers"]
-        #             self.data["customers"][int(user)-1]["balance"] -= int(self.withdraw_money.withdraw_edit.text())
-        #             self.withdraw_money.balance3_label.setText(str(self.users[int(user)-1]["balance"]) + " €") 
-
-        #             self.data["customers"][int(user)-1]["money_activities"].append(f"--Withrawed {int(self.withdraw_money.withdraw_edit.text())} $ at {datetime.datetime.now()}#") 
-        #             with open(os.path.join(__location__, 'data2.json'),'w') as f:
-        #                 json.dump(self.data , f, indent=4)
-        #         self.withdraw_money.messsage2_button.setText("Succesfully withdrawed")
-                
-                
-                    
-        #     else :
-        #         self.withdraw_money.messsage2_button.setText("Insufficient Fund !!!")
-                
-        # except :
-        #     self.withdraw_money.messsage2_button.setText("Invalid amount !!!")
-        
-                     
-
-                    
-
+      
 
     def donus(self):
         self.openaccountpage = AccountPage()
@@ -439,19 +407,12 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
         try :
             self.user_id = int(self.loginForm.lineEditUser.text())
             self.user_password = self.loginForm.lineEditPassword.text() 
-        
-            user = int(self.user_id)
-            password = self.user_password
-            
 
             db= Query_open()
             user_listm = db.Insert_tbl3('employee_id' , 'tblemployee')
             db= Query_open()
             pass_listm=db.Insert_tbl3('password', 'tblemployee')
 
-            for i in range(len(user_listm)):
-                
-                    
                 if (user_listm[i][0]) == self.user_password and (pass_listm[i][0]== self.user_password):
                         self.accountForm= AccounAdminPage()
                         self.close()   
@@ -459,10 +420,6 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
                     
                         self.hide()
 
-              
-        except :
-                self.loginForm.labelErrorMessage.setText(" User Name or  User Password is incorrect! Try Again ")
-                self.loginForm.labelErrorMessage.show()
                 
 
 
@@ -547,22 +504,7 @@ class AccounAdminPage(QWidget):
         self.accounderForm.label.hide()
 
 
-    # def accoundCread(self):  # bu adımda qt üzerinden bilgiler alınır
-        # pass
-         
-        # with open(os.path.join(__location__, 'data2.json')) as f:
-        #     data = json.load(f)
-        #     heades = data["customers"]
-        #     row_index = 0
-        #     for i in heades:
-            #     for k in i :  # k benim sozlukteki key dir. i ise listedeki sozluktur.
-                # self.accounderForm.tableWidget.setItem(0,0,QTableWidgetItem(str(len(heades)+1)))  # i[k] bana sozlukteki key degerini veriyor.
-                # self.accounderForm.tableWidget.setItem(0,1,QTableWidgetItem(i["name"]))  # i[k] bana sozlukteki key degerini veriyor.
-                # self.accounderForm.tableWidget.setItem(0,2,QTableWidgetItem(i["surname"]))  # i[k] bana sozlukteki key degerini veriyor.
-                # self.accounderForm.tableWidget.setItem(0,5,QTableWidgetItem(str(i["balance"])))  # i[k] bana sozlukteki key degerini veriyor.
-                # self.accounderForm.tableWidget.setItem(0,3,QTableWidgetItem(i["e-mail"]))  # i[k] bana sozlukteki key degerini veriyor.
-                # self.accounderForm.tableWidget.setItem(0,4,QTableWidgetItem(str(i["tax-number"])))  # i[k] bana sozlukteki key degerini veriyor.
-                # self.accounderForm.tableWidget.setItem(0,6,QTableWidgetItem(i["password"]))  # i[k] bana sozlukteki key degerini veriyor.
+    
                 
 
 
@@ -570,53 +512,15 @@ class AccounAdminPage(QWidget):
 
     def write_db(self):  # bu aşamada database yazılıyr
 
-        # conn = psycopg2.connect("dbname = atm_db user= postgres password=1234")  #herhangi bir dbname = ... olmasa da yapıyor 
-        # cur = conn.cursor()
-        # # cur.execute('select text.count(*), from tblcustomer')
-
-        # cur.execute('INSERT INTO tblcustomer (customer_id,first_name,last_name,email,password) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',(8,self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditPassword.text(),datetime.datetime,0,5,5,5,self.accounderForm.lineEditBalans.text()))
-        # # cur.execute('INSERT INTO forimportcsv VALUES(%s,%s,%s)',(self.accounderForm.lineEditName.text(),self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditPassword.text()))
-
-        # # cur .execute('INSERT INTO accountList VALUES(%s,%s,%s,%s,%s,%s)',(154758,"ayse","yasa","ayseyasa@gmail.com",2487550, 58247))
         
-        # cur.close()
-        # conn.commit() #onay gibi 
-        # conn.close() 
 
         qr=Query_open()
-        qr.Insert_tbl('tblcustomer',randint(100000, 999999),self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditPassword.text(),self.accounderForm.lineEditBalans.text()) #attention ! Error if customer_id exists
-
+        customer_id = randint(100000, 999999)
+        qr.Insert_tbl('tblcustomer',customer_id,self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditPassword.text(),self.accounderForm.lineEditBalans.text()) #attention ! Error if customer_id exists
+        print(customer_id)
         
-        # with open(os.path.join(__location__, 'data2.json')) as json_file:
-        #     data = json.load(json_file)
-        #     temp = data["customers"]
-        #     y = {
-        #     "id": len(temp)+100001,
-        #     "name": self.accounderForm.lineEditName.text(),
-        #     "surname":self.accounderForm.lineEditSurname.text(),
-        #     "balance":int(self.accounderForm.lineEditBalans.text()),
-        #     "e-mail" : self.accounderForm.lineEditEmail.text(),
-        #     "tax-number" :int(self.accounderForm.lineEditTax.text()),
-        #     "password" : self.accounderForm.lineEditPassword.text() ,
-        #     "login_log" : [],
-        #     "money_activities" : [],
-        #     "register_log" : f"Customer {len(temp)+100001} registered at {datetime.datetime.now()}"           
-        #     }
-        #     temp.append(y)
-        # try:
-        #     assert len(self.accounderForm.lineEditPassword.text())>=6
-        #     with open(os.path.join(__location__, 'data2.json'),'w') as f:
-        #         json.dump(data , f, indent=4)
-            
-        #     self.accounderForm.label.setText("Account is created succesfully !")
-        #     self.accounderForm.label.show()
-        #     self.accoundCread()
-
-            
-        # except :
-        #     print("password must be at least 6 digits")
-        #     self.accounderForm.label.show()
-
+        
+       
 
     def return_admin_choice(self):
         self.choiceform = Choicepage()
