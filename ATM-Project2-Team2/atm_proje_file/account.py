@@ -419,7 +419,7 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
         self.loginForm.setupUi(self)
         self.loginForm.labelErrorMessage.hide()
         self.loginForm.pushButtonLogin.clicked.connect(self.choice_menu)
-        # self.loginForm.pushButtonLogin.clicked.connect(self.AccountAdminOpen) # login tiklanirsa AccountOpen modulunu calistiracak.
+        self.loginForm.pushButtonLogin.clicked.connect(self.AccountAdminOpen) # login tiklanirsa AccountOpen modulunu calistiracak.
         self.loginForm.pushButtonLogin2.clicked.connect(self.go_customer_login)
 
     def choice_menu(self):
@@ -433,31 +433,36 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
         self.close()
         self.loginform.show()
 
+     def AccountAdminOpen(self):
+        global user,password
+       
+        try :
+            self.user_id = int(self.loginForm.lineEditUser.text())
+            self.user_password = self.loginForm.lineEditPassword.text() 
         
-     
-   
-    # def AccountAdminOpen(self):
+            user = int(self.user_id)
+            password = self.user_password
+            
 
-    #     user_name = self.loginForm.lineEditUser.text()
-    #     user_pass = self.loginForm.lineEditPassword.text()  
-        
-        # fileloc = os.getcwd()
-        # with open(f"{fileloc}\\atmproject\\atm_proje_file\\data.json") as f:
-        #     data = json.load(f)
-        #     users = data["bank"]
-            
-        #     for i in users:
-        #         if i["name"] == user_name:
-        #             if i["password"] == user_pass:
-        #                 self.hide()
-        #                 # self.openaccountpage.show()   # bu gecici olarak yazilan bir kod. daha sonra data dan alacagiz.
-        #                 self.accountForm= AccounAdminPage()
-        #                 self.close()   
-        #                 self.accountForm.show()   # simdi login de sartlari soracak eger dogruysa diger arayuzu burada gosterecektir.
-            
-        #         else :
-        #             self.loginForm.labelErrorMessage.setText(F" {user_name} User Name or  User Password is incorrect! Try Again ")
-        #             self.loginForm.labelErrorMessage.show()
+            db= Query_open()
+            user_listm = db.Insert_tbl3('employee_id' , 'tblemployee')
+            db= Query_open()
+            pass_listm=db.Insert_tbl3('password', 'tblemployee')
+
+            for i in range(len(user_listm)):
+                
+                    
+                if (user_listm[i][0]) == self.user_password and (pass_listm[i][0]== self.user_password):
+                        self.accountForm= AccounAdminPage()
+                        self.close()   
+                        self.accountForm.show()
+                    
+                        self.hide()
+
+              
+        except :
+                self.loginForm.labelErrorMessage.setText(" User Name or  User Password is incorrect! Try Again ")
+                self.loginForm.labelErrorMessage.show()
                 
 
 
