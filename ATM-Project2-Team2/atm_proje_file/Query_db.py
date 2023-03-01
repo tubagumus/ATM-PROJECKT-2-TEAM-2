@@ -217,8 +217,7 @@ class Query_open():
         self.cur.execute(self.command,self.insert_value)
         print("basari ile insert yapildi..")
         
-        self.Query_close()
-
+        self.Query_close(
     
         
     def Insert_tbl3(self,tble_name,*args):
@@ -278,18 +277,3 @@ db_Table=ATM_Create()
 
 
 
-# db = Query_open()
-# tbl_log = db.Query_tbl_1('login_log','tblcustomer')
-# for log in tbl_log:
-#     print(log)
-
-# db = Query_open()
-# tbl_create = db. Query_tbl_1('create_date', 'tblcustomer')
-# for  cr in tbl_create:
-#     print(cr)
-
-# db.command = f'INSERT INTO tblaccountaktivities (activities_id,withdraw_money,insert_money,transfer_money,balance) VALUES(3,50,100,200,11111) '
-
-# db.cur.execute(db.command)
-
-# db.Query_close()

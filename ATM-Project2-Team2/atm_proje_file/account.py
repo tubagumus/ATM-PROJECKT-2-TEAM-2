@@ -401,34 +401,25 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
         self.close()
         self.loginform.show()
 
-        
-     
-   
-    def AccountAdminOpen(self):
+     def AccountAdminOpen(self):
         global user,password
        
         try :
             self.user_id = int(self.loginForm.lineEditUser.text())
             self.user_password = self.loginForm.lineEditPassword.text() 
-        
-            user = int(self.user_id)
-            password = self.user_password
-            
-    
+
             db= Query_open()
             user_listm = db.Insert_tbl3('employee_id' , 'tblemployee')
             db= Query_open()
             pass_listm=db.Insert_tbl3('password', 'tblemployee')
-            for i in range(len(user_listm)):
+
                 if (user_listm[i][0]) == self.user_password and (pass_listm[i][0]== self.user_password):
                         self.accountForm= AccounAdminPage()
                         self.close()   
                         self.accountForm.show()
                     
                         self.hide()
-        except :
-            self.loginForm.labelErrorMessage.setText(" User Name or  User Password is incorrect! Try Again ")
-            self.loginForm.labelErrorMessage.show()
+
                 
 
 
