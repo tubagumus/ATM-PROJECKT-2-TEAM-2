@@ -209,6 +209,14 @@ class Query_open():
         print("basari ile insert yapildi..")
         
         self.Query_close()
+        
+     def Insert_tbl3(self,tble_name,*args):
+        self.command = f'INSERT INTO {tble_name} (employee_id , password) VALUES(%s,%s) '
+        self.insert3_value=(args)
+        self.cur.execute(self.command,self.insert3_value)
+        print("basari ile insert yapildi..")
+        
+        self.Query_close()      
    
     
     
