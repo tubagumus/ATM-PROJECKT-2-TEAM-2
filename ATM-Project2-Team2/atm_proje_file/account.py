@@ -420,7 +420,8 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
                 
                     self.hide()
         except:
-            pass
+            self.loginForm.labelErrorMessage.setText(" User Name or  User Password is incorrect! Try Again ")
+            self.loginForm.labelErrorMessage.show()
 
                 
 
