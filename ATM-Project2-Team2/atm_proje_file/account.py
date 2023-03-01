@@ -169,6 +169,57 @@ class Transferpage(QMainWindow):
         self.transfer_money.lbl_error_valid_amount.hide()
         self.transfer_money.lbl_succesfull.hide()
 
+        db = Query_open()
+        
+        db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+        db.cur.execute(db.command)
+        result =db.cur.fetchall()
+        db.Query_close()
+        self.transfer_money.lbl_balance_show.setText(str(result[0][0]))
+
+        self.transfer_money.btn_check_id.clicked.connect(self.check_id)
+        self.transfer_money.btn_transfer.clicked.connect(self.transfer)
+    def transfer(self):
+
+        db = Query_open()
+        
+        # db.command= f'UPDATE tblaccountaktivities SET withdraw_money ={new_insert}  WHERE customer_id = {user}'
+        # db.cur.execute(db.command)
+        db.cur.execute(f'SELECT balance FROM tblcustomer where customer_id = {user} ')
+        result =db.cur.fetchall()
+        new_balance2 = (result[0][0]) - int(self.transfer_money.edit_transfer_amount.text())
+        db.cur.execute(f'UPDATE tblcustomer SET balance ={new_balance2}  WHERE customer_id = {user}')
+        db.cur.execute(f'INSERT INTO tblaccountaktivities (customer_id,balance,transfer_money) VALUES({user},{new_balance2},{int(self.transfer_money.edit_transfer_amount.text())}) ')
+        
+        db.cur.execute(f'SELECT balance FROM tblcustomer where customer_id = {self.transfer_money.edit_customer_id.text()} ')
+        result =db.cur.fetchall()
+        new_balance3 = (result[0][0]) + int(self.transfer_money.edit_transfer_amount.text())
+        db.cur.execute(f'UPDATE tblcustomer SET balance ={new_balance3}  WHERE customer_id = {self.transfer_money.edit_customer_id.text()}')
+        
+        db.Query_close()
+
+        db = Query_open()
+        
+        db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+        db.cur.execute(db.command)
+        result =db.cur.fetchall()
+        db.Query_close()
+        self.transfer_money.lbl_balance_show.setText(str(result[0][0]))
+
+        self.transfer_money.btn_check_id.clicked.connect(self.check_id)
+        self.transfer_money.btn_transfer.clicked.connect(self.transfer)
+
+    def check_id(self):
+        db = Query_open()
+        
+        db.command = f'SELECT first_name, last_name FROM tblcustomer where customer_id = {self.transfer_money.edit_customer_id.text()} '
+        db.cur.execute(db.command)
+        result =db.cur.fetchall()
+        db.Query_close()
+        self.transfer_money.lbl_customer_name.setText(str(result[0][0])+" "+str(result[0][1]))
+        
+
+        pass
     def donus(self):
         self.openaccountpage = AccountPage()
         self.close()
@@ -391,6 +442,7 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
         self.loginForm.pushButtonLogin2.clicked.connect(self.go_customer_login)
 
     def choice_menu(self):
+        
         self.choiceform = Choicepage()
         self.close()
         self.choiceform.show()
@@ -409,16 +461,20 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
             self.user_password = self.loginForm.lineEditPassword.text() 
 
             db= Query_open()
-            user_listm = db.Insert_tbl3('employee_id' , 'tblemployee')
+            user_listm = db.Query_tbl_1('employee_id' , 'tblemployee')
             db= Query_open()
-            pass_listm=db.Insert_tbl3('password', 'tblemployee')
+            pass_listm=db.Query_tbl_1('password', 'tblemployee')
             for i in range(len(user_listm)):
-                if (user_listm[i][0]) == self.user_password and (pass_listm[i][0]== self.user_password):
+                if user_listm[i][0] == self.user_password and pass_listm[i][0]== self.user_password:
                     self.accountForm= AccounAdminPage()
                     self.close()   
                     self.accountForm.show()
                 
                     self.hide()
+                else :
+                    self.loginForm.labelErrorMessage.setText(" User Name or  User Password is incorrect! Try Again ")
+                    self.loginForm.labelErrorMessage.show()
+
         except:
             self.loginForm.labelErrorMessage.setText(" User Name or  User Password is incorrect! Try Again ")
             self.loginForm.labelErrorMessage.show()
