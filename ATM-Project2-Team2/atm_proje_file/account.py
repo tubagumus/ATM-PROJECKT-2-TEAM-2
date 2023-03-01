@@ -32,6 +32,11 @@ import os
 __location__ = os.path.realpath(
         os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
+from random import randint, randrange
+
+randint(100, 999)     # randint is inclusive at both ends
+randrange(100, 1000)  # randrange is exclusive at the stop
+
 class LoginPage(QMainWindow):
     '''
     login page of the app where user can enter 
@@ -64,49 +69,37 @@ class LoginPage(QMainWindow):
         
             user = int(self.id)
             password = self.password
-           
+            
 
             db= Query_open()
             
             tbl_listem=db.Query_tbl_1('password', 'tblcustomer')
+            db= Query_open()
             tbl_list=db.Query_tbl_1('customer_id', 'tblcustomer')
-            for i in tbl_listem:
-               print(i)
-               if i == self.password:
+            
+            
+            for i in range(len(tbl_listem)):
+                
+                if (tbl_listem[i][0]) == self.password and (tbl_list[i][0]== self.id):
                     
-                    for k in tbl_list:
-                        print(k)
-                        if k == self.id:
-                            self.hide()
-                            self.openaccountpage.show()
-                            self.login_log()
-            # fileloc = os.getcwd()
-            
-            # with open(os.path.join(__location__, 'data2.json')) as f:
-            #     self.data = json.load(f)
-            #     self.users = self.data["customers"]
-            
-            #     if self.users[int(user)-1]["id"] == int(user)+100000:
-            #         if str(self.users[int(user)-1]["password"]) == str(password):
-            #             self.hide()
-            #             self.openaccountpage.show()
-            #             self.login_log()
+                    self.hide()
+                    self.openaccountpage.show()
+                else :
+                    self.loginform.id_label2.show()
+                    self.loginform.id_label2.setText("Wrong name or password !!!")
+
+              
         except :
             self.loginform.id_label2.show()
             self.loginform.id_label2.setText("Wrong name or password !!!")
+            
            
                               
                         
     def login_log(self):
+        pass
         
-        with open(os.path.join(__location__, 'data2.json')) as f:
-            self.data = json.load(f)
-            # self.users = self.data["customers"]
-            self.data["customers"][int(user)-1]["login_log"].append(f"--Logged in at {datetime.datetime.now()}#")
-                 
-        with open(os.path.join(__location__, 'data2.json','w')) as f:
-            json.dump(self.data , f, indent=4)                    
-        
+    
                           
 class AccountPage(QMainWindow):
     
@@ -202,17 +195,14 @@ class BalancePage(QMainWindow):
         self.checkbalance.return1_button.clicked.connect(self.donus)
 
         db = Query_open()
-        tbl_balance = db.Query_tbl_1('balance', 'tblcustomer')
-        for b in tbl_balance:
-            #self.checkbalance.balance_label.setText(int('balance') + " €") #emin degilim bu kod dogru mu,
-            print(b) 
-
-
-
-        # with open(os.path.join(__location__, 'data2.json')) as f:
-        #     self.data = json.load(f)
-        #     self.users = self.data["customers"]
-        #     self.checkbalance.balance_label.setText(str(self.users[int(user)-1]["balance"]) + " €")
+        
+        db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+        db.cur.execute(db.command)
+        result =db.cur.fetchall()
+        db.Query_close()
+        self.checkbalance.balance_label.setText(str(result[0][0]))
+        
+       
 
     def donus(self):
         self.openaccountpage = AccountPage()
@@ -228,37 +218,68 @@ class InsertPage(LoginPage,QMainWindow):
         self.insert_money.return2_button.clicked.connect(self.donus)
         self.insert_money.balance3_label.hide()
         
-    
-        with open(os.path.join(__location__, 'data2.json')) as f:
-            self.data = json.load(f)
-            self.users = self.data["customers"]
-            
-                
-            self.insert_money.balance2_label.setText(str(self.users[int(user)-1]["balance"]) + " €")
-            self.insert_money.enter2_button.clicked.connect(self.add_money)
+        db = Query_open()
+        
+        db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+        db.cur.execute(db.command)
+        result =db.cur.fetchall()
+        db.Query_close()
+        self.insert_money.balance2_label.setText(str(result[0][0]))
+        self.insert_money.enter2_button.clicked.connect(self.add_money)
             
         
 
     def add_money(self):
 
-        try :
-            assert (int(self.insert_money.insert_edit.text())/1).is_integer()
-            with open(os.path.join(__location__, 'data2.json')) as f:
-                self.data = json.load(f)
-                self.users = self.data["customers"]
-                self.data["customers"][int(user)-1]["balance"] += int(self.insert_money.insert_edit.text())
-                self.insert_money.balance2_label.setText(str(self.users[int(user)-1]["balance"]) + " €")
-                self.data["customers"][int(user)-1]["money_activities"].append(f"--Inserted {int(self.insert_money.insert_edit.text())} € at {datetime.datetime.now()}#")     
+        # try :
+            db = Query_open()
+            db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+
+            db.cur.execute(db.command)
+            result =db.cur.fetchall()
+            db.Query_close()
+            self.insert_money.balance2_label.setText(str(result[0][0]))
+            
+
+
+            db = Query_open()
+            db.command= f'UPDATE tblcustomer SET insert_money ={int(self.insert_money.insert_edit.text())}  WHERE customer_id = {user}'
+            db.cur.execute(db.command)
+            new_balance = int(self.insert_money.insert_edit.text())+ (result[0][0])
+
+            db.command= f'UPDATE tblcustomer SET balance ={new_balance}  WHERE customer_id = {user}'
+            
+            db.cur.execute(db.command)
+            
+            db.Query_close()
+
+            db = Query_open()
+            db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+            db.cur.execute(db.command)
+            result =db.cur.fetchall()
+            db.Query_close()
+            self.insert_money.balance2_label.setText(str(result[0][0]))
+            
+
+
+            
+            # assert (int(self.insert_money.insert_edit.text())/1).is_integer()
+            # with open(os.path.join(__location__, 'data2.json')) as f:
+            #     self.data = json.load(f)
+            #     self.users = self.data["customers"]
+            #     self.data["customers"][int(user)-1]["balance"] += int(self.insert_money.insert_edit.text())
+            #     self.insert_money.balance2_label.setText(str(self.users[int(user)-1]["balance"]) + " €")
+            #     self.data["customers"][int(user)-1]["money_activities"].append(f"--Inserted {int(self.insert_money.insert_edit.text())} € at {datetime.datetime.now()}#")     
         
         
-            with open(os.path.join(__location__, 'data2.json'),'w') as f:
-                json.dump(self.data , f, indent=4)
-            self.insert_money.balance3_label.show()
-            self.insert_money.balance3_label.setText("Inserted succesfully ")
-        except :
+            # with open(os.path.join(__location__, 'data2.json'),'w') as f:
+            #     json.dump(self.data , f, indent=4)
+            # self.insert_money.balance3_label.show()
+            # self.insert_money.balance3_label.setText("Inserted succesfully ")
+        # except :
         
-            self.insert_money.balance3_label.show()
-            self.insert_money.balance3_label.setText("Please enter an number !!!")
+        #     self.insert_money.balance3_label.show()
+        #     self.insert_money.balance3_label.setText("Please enter an number !!!")
 
         
         
@@ -277,38 +298,68 @@ class WithdrawPage(LoginPage,QMainWindow):
         self.withdraw_money.setupUi(self)
         self.withdraw_money.return3_button.clicked.connect(self.donus)
 
-        with open(os.path.join(__location__, 'data2.json')) as f:
+        
+        db = Query_open()
+        db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+        db.cur.execute(db.command)
+        result =db.cur.fetchall()
+        db.Query_close()
+        self.withdraw_money.balance3_label.setText(str(result[0][0]))
+        self.withdraw_money.enter_button.clicked.connect(self.take_money)
 
-            self.data = json.load(f)
-            self.users = self.data["customers"]
-            self.withdraw_money.balance3_label.setText(str(self.users[int(user)-1]["balance"]) + " €")
-            self.withdraw_money.enter_button.clicked.connect(self.take_money)
                     
     def take_money(self):
+
+            db = Query_open()
+            db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+
+            db.cur.execute(db.command)
+            result =db.cur.fetchall()
+            db.Query_close()
+            self.withdraw_money.balance3_label.setText(str(result[0][0]))
+            
+
+
+            db = Query_open()
+            new_insert = int(self.withdraw_money.withdraw_edit.text())
+            db.command= f'UPDATE tblcustomer SET withdraw_money ={new_insert}  WHERE customer_id = {user}'
+            db.cur.execute(db.command)
+            new_balance2 = (result[0][0]) - int(self.withdraw_money.withdraw_edit.text())
+            db.command= f'UPDATE tblcustomer SET balance ={new_balance2}  WHERE customer_id = {user}'
+            
+            db.cur.execute(db.command)
+            db.Query_close()
+
+            db = Query_open()
+            db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
+            db.cur.execute(db.command)
+            result =db.cur.fetchall()
+            db.Query_close()
+            self.withdraw_money.balance3_label.setText(str(result[0][0]))
         
-        try :
-            assert (int(self.withdraw_money.withdraw_edit.text())/1).is_integer()
+        # try :
+        #     assert (int(self.withdraw_money.withdraw_edit.text())/1).is_integer()
 
-            if self.data["customers"][int(user)-1]["balance"]  >= int(self.withdraw_money.withdraw_edit.text()) :
-                self.withdraw_money.messsage2_button.setText("")
-                with open(os.path.join(__location__, 'data2.json')) as f:
-                    self.data = json.load(f)
-                    self.users = self.data["customers"]
-                    self.data["customers"][int(user)-1]["balance"] -= int(self.withdraw_money.withdraw_edit.text())
-                    self.withdraw_money.balance3_label.setText(str(self.users[int(user)-1]["balance"]) + " €") 
+        #     if self.data["customers"][int(user)-1]["balance"]  >= int(self.withdraw_money.withdraw_edit.text()) :
+        #         self.withdraw_money.messsage2_button.setText("")
+        #         with open(os.path.join(__location__, 'data2.json')) as f:
+        #             self.data = json.load(f)
+        #             self.users = self.data["customers"]
+        #             self.data["customers"][int(user)-1]["balance"] -= int(self.withdraw_money.withdraw_edit.text())
+        #             self.withdraw_money.balance3_label.setText(str(self.users[int(user)-1]["balance"]) + " €") 
 
-                    self.data["customers"][int(user)-1]["money_activities"].append(f"--Withrawed {int(self.withdraw_money.withdraw_edit.text())} $ at {datetime.datetime.now()}#") 
-                    with open(os.path.join(__location__, 'data2.json'),'w') as f:
-                        json.dump(self.data , f, indent=4)
-                self.withdraw_money.messsage2_button.setText("Succesfully withdrawed")
+        #             self.data["customers"][int(user)-1]["money_activities"].append(f"--Withrawed {int(self.withdraw_money.withdraw_edit.text())} $ at {datetime.datetime.now()}#") 
+        #             with open(os.path.join(__location__, 'data2.json'),'w') as f:
+        #                 json.dump(self.data , f, indent=4)
+        #         self.withdraw_money.messsage2_button.setText("Succesfully withdrawed")
                 
                 
                     
-            else :
-                self.withdraw_money.messsage2_button.setText("Insufficient Fund !!!")
+        #     else :
+        #         self.withdraw_money.messsage2_button.setText("Insufficient Fund !!!")
                 
-        except :
-            self.withdraw_money.messsage2_button.setText("Invalid amount !!!")
+        # except :
+        #     self.withdraw_money.messsage2_button.setText("Invalid amount !!!")
         
                      
 
@@ -332,7 +383,7 @@ class StatementPage(LoginPage,QMainWindow):
         tbl_log = db.Query_tbl_1('login_log','tblcustomer')
         for log in tbl_log:
             print(log)
-
+        
         tbl_balance = db.Query_tbl_1('balance', 'tblcustomer')
         for b in tbl_balance:
             
@@ -514,18 +565,21 @@ class AccounAdminPage(QWidget):
 
     def write_db(self):  # bu aşamada database yazılıyr
 
-        conn = psycopg2.connect("dbname = postgres user= postgres password=1234")  #herhangi bir dbname = ... olmasa da yapıyor 
-        cur = conn.cursor()
-        cur.execute('INSERT INTO forimportcsv VALUES(%s,%s,%s,%s,%s,%s,%s)',(self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditBalans.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditPassword.text()))
-        # cur.execute('INSERT INTO forimportcsv VALUES(%s,%s,%s)',(self.accounderForm.lineEditName.text(),self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditPassword.text()))
+        # conn = psycopg2.connect("dbname = atm_db user= postgres password=1234")  #herhangi bir dbname = ... olmasa da yapıyor 
+        # cur = conn.cursor()
+        # # cur.execute('select text.count(*), from tblcustomer')
 
-        # cur .execute('INSERT INTO accountList VALUES(%s,%s,%s,%s,%s,%s)',(154758,"ayse","yasa","ayseyasa@gmail.com",2487550, 58247))
+        # cur.execute('INSERT INTO tblcustomer (customer_id,first_name,last_name,email,password) VALUES(%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s)',(8,self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditPassword.text(),datetime.datetime,0,5,5,5,self.accounderForm.lineEditBalans.text()))
+        # # cur.execute('INSERT INTO forimportcsv VALUES(%s,%s,%s)',(self.accounderForm.lineEditName.text(),self.accounderForm.lineEditTax.text(),self.accounderForm.lineEditPassword.text()))
+
+        # # cur .execute('INSERT INTO accountList VALUES(%s,%s,%s,%s,%s,%s)',(154758,"ayse","yasa","ayseyasa@gmail.com",2487550, 58247))
         
-        cur.close()
-        conn.commit() #onay gibi 
-        conn.close() 
+        # cur.close()
+        # conn.commit() #onay gibi 
+        # conn.close() 
 
-
+        qr=Query_open()
+        qr.Insert_tbl('tblcustomer',randint(100000, 999999),self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditPassword.text(),self.accounderForm.lineEditBalans.text()) #attention ! Error if customer_id exists
 
         
         # with open(os.path.join(__location__, 'data2.json')) as json_file:

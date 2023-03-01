@@ -96,10 +96,10 @@ class ATM_Create():
                     password varchar(20) NOT NULL,
                     create_date date NOT NULL DEFAULT CURRENT_DATE  ,
                     login_log varchar(255),
-                    withdraw_money money DEFAULT '00000',
-                    insert_money money DEFAULT '00000',
-                    transfer_money money DEFAULT '00000',
-                    balance money DEFAULT '00000'
+                    withdraw_money int ,
+                    insert_money int  ,
+                    transfer_money int ,
+                    balance int 
     )
     '''
         self.command_2 = ''' CREATE TABLE IF NOT EXISTS tblemployee
@@ -116,20 +116,28 @@ class ATM_Create():
     (               
                     customer_id int,
                     employee_id int,
-                    totalMoney money,
-                    dailywithdraw money,
-                    dailyInsert money,
+                    totalMoney int,
+                    dailywithdraw int,
+                    dailyInsert int,
                     CONSTRAINT FK_Employee_id_TblDailyAktivities FOREIGN KEY(employee_id) REFERENCES tblemployee(employee_id),
                     CONSTRAINT FK_CustomerTblDailyAktivities FOREIGN KEY(customer_id)  REFERENCES tblcustomer(customer_id)
 
 
     )
     '''
+        
+
+    
+    
+        
+
+
 # If you want to remove these tables from the database, you should start from the reverse in this order!...
         self.cur.execute(self.command_1)
         # self.cur.execute(f'ALTER SEQUENCE "tblcustomer_customer_id_seq" RESTART WITH {10000};')
         self.cur.execute(self.command_2)
         self.cur.execute(self.command_3)
+        
         self.cur.close()
         self.conn.commit()
         self.conn.close()
@@ -195,7 +203,7 @@ class Query_open():
         return result
 
     def Insert_tbl(self,table_name,*args):
-        self.command = f'INSERT INTO {table_name} (customer_id,first_name,last_name,email,password) VALUES(%s,%s,%s,%s,%s) '
+        self.command = f'INSERT INTO {table_name} (customer_id,first_name,last_name,email,password,balance) VALUES(%s,%s,%s,%s,%s,%s) '
         insert_value=(args)
         self.cur.execute(self.command,insert_value)
         print("basari ile insert yapildi..")
@@ -217,7 +225,7 @@ class Query_open():
 
 
 
-# db_Table=ATM_Create()   
+db_Table=ATM_Create()   
 #
 
 # bu kodlari tablolarin icerigini genel olarak almak icin kullaniyoruz. Fonksiyonun icerisine hangi tablo ismini istiyorsak yazmamiz lazim.
@@ -226,14 +234,14 @@ class Query_open():
 # for i in tbl_listem:
 #     print(i)
 
-db= Query_open()
-tbl_listem=db.Query_tbl_1('password','tblcustomer')
-for i in tbl_listem:
-    print(tbl_listem)
+# db= Query_open()
+# tbl_listem=db.Query_tbl_1('password','tblcustomer')
+# for i in tbl_listem:
+#     print(tbl_listem)
 
 #Bu asagidaki kodlarda foksiyona giden ilk deger tablo ismi digerler ise *Args a gidiyor . id mevcut ise hata aliyoruz.
 # qr=Query_open()
-# qr.Insert_tbl('tblcustomer',3,'cemile','Can','Can@gmail.com','123456') #attention ! Error if customer_id exists
+# qr.Insert_tbl('tblcustomer',6,'cemile','Can','Can@gmail.com','123') #attention ! Error if customer_id exists
 
 # #update  codes
 # qr=Query_open()
@@ -241,19 +249,19 @@ for i in tbl_listem:
 # x= {'customer_id':6,'first_name':'Huriye','last_name':'Can','email': 'Can@gmail.com'}
 # qr.Update_tbl('tblcustomer',v,x)
 
-db = Query_open()
-tbl_balance = db.Query_tbl_1('balance', 'tblcustomer')
-for b in tbl_balance:
-    print(b)
+# db = Query_open()
+# tbl_balance = db.Query_tbl_1('balance', 'tblcustomer')
+# for b in tbl_balance:
+#     print(b)
 
 
 
-db = Query_open()
-tbl_log = db.Query_tbl_1('login_log','tblcustomer')
-for log in tbl_log:
-    print(log)
+# db = Query_open()
+# tbl_log = db.Query_tbl_1('login_log','tblcustomer')
+# for log in tbl_log:
+#     print(log)
 
-db = Query_open()
-tbl_create = db. Query_tbl_1('create_date', 'tblcustomer')
-for  cr in tbl_create:
-    print(cr)
+# db = Query_open()
+# tbl_create = db. Query_tbl_1('create_date', 'tblcustomer')
+# for  cr in tbl_create:
+#     print(cr)
