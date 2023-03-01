@@ -401,7 +401,7 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
         self.close()
         self.loginform.show()
 
-     def AccountAdminOpen(self):
+    def AccountAdminOpen(self):
         global user,password
        
         try :
@@ -413,12 +413,14 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
             db= Query_open()
             pass_listm=db.Insert_tbl3('password', 'tblemployee')
 
-                if (user_listm[i][0]) == self.user_password and (pass_listm[i][0]== self.user_password):
-                        self.accountForm= AccounAdminPage()
-                        self.close()   
-                        self.accountForm.show()
-                    
-                        self.hide()
+            if (user_listm[i][0]) == self.user_password and (pass_listm[i][0]== self.user_password):
+                self.accountForm= AccounAdminPage()
+                self.close()   
+                self.accountForm.show()
+            
+                self.hide()
+        except:
+            pass
 
                 
 

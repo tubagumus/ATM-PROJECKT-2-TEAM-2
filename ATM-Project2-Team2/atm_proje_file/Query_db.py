@@ -217,7 +217,7 @@ class Query_open():
         self.cur.execute(self.command,self.insert_value)
         print("basari ile insert yapildi..")
         
-        self.Query_close(
+        self.Query_close()
     
         
     def Insert_tbl3(self,tble_name,*args):
