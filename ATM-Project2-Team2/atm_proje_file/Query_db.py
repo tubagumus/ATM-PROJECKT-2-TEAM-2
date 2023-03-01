@@ -264,12 +264,3 @@ db_Table=ATM_Create()
 
 
 
-# db = Query_open()
-# tbl_log = db.Query_tbl_1('login_log','tblcustomer')
-# for log in tbl_log:
-#     print(log)
-
-# db = Query_open()
-# tbl_create = db. Query_tbl_1('create_date', 'tblcustomer')
-# for  cr in tbl_create:
-#     print(cr)
