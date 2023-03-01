@@ -93,34 +93,43 @@ class ATM_Create():
                     first_name varchar(20) NOT NULL,
                     last_name varchar(20) NOT NULL,
                     email varchar(255) NOT NULL,
+                    balance int ,
                     password varchar(20) NOT NULL,
-                    create_date date NOT NULL DEFAULT CURRENT_DATE  ,
-                    login_log varchar(255),
-                    withdraw_money int ,
-                    insert_money int  ,
-                    transfer_money int ,
-                    balance int 
+                    create_date date NOT NULL DEFAULT CURRENT_DATE  
+                    
     )
     '''
         self.command_2 = ''' CREATE TABLE IF NOT EXISTS tblemployee
     (
         employee_id serial  PRIMARY KEY,
-        password varchar(10) NOT NULL,
-        customer_id int,
-        CONSTRAINT FK_CustomerTblEmployee FOREIGN KEY(customer_id)  REFERENCES tblcustomer(customer_id)
+        password varchar(10) NOT NULL
+        
         
     )
         '''
 
         self.command_3 = ''' CREATE TABLE IF NOT EXISTS tbldailyaktivities
     (               
-                    customer_id int,
-                    employee_id int,
+                    day_id date PRIMARY KEY NOT NULL DEFAULT CURRENT_DATE,
                     totalMoney int,
                     dailywithdraw int,
-                    dailyInsert int,
-                    CONSTRAINT FK_Employee_id_TblDailyAktivities FOREIGN KEY(employee_id) REFERENCES tblemployee(employee_id),
-                    CONSTRAINT FK_CustomerTblDailyAktivities FOREIGN KEY(customer_id)  REFERENCES tblcustomer(customer_id)
+                    dailyInsert int
+                    
+
+
+    )
+    '''
+        self.command_4 = ''' CREATE TABLE IF NOT EXISTS tblaccountaktivities
+    (               
+                    activities_id serial PRIMARY KEY,
+                    customer_id int ,
+                    balance int,
+                    login_log timestamp with time zone DEFAULT CURRENT_TIMESTAMP ,
+                    withdraw_money int ,
+                    insert_money int  ,
+                    transfer_money int
+                    
+                    
 
 
     )
@@ -137,13 +146,13 @@ class ATM_Create():
         # self.cur.execute(f'ALTER SEQUENCE "tblcustomer_customer_id_seq" RESTART WITH {10000};')
         self.cur.execute(self.command_2)
         self.cur.execute(self.command_3)
-        
+        self.cur.execute(self.command_4)
         self.cur.close()
         self.conn.commit()
         self.conn.close()
         
         print("Your database connection has been closed")
-        print("3 tables were created in atm_db.\n\n")
+        print("4 tables were created in atm_db.\n\n")
 
 
 
@@ -181,7 +190,7 @@ class Query_open():
         self.cur.close()
         self.conn.commit()
         self.conn.close()
-        print("\n")
+        print("\nDatabase werd gesloten")
 
     #query of tables in db
     def Query_tbl(self,tbl_name):
@@ -204,13 +213,21 @@ class Query_open():
 
     def Insert_tbl(self,table_name,*args):
         self.command = f'INSERT INTO {table_name} (customer_id,first_name,last_name,email,password,balance) VALUES(%s,%s,%s,%s,%s,%s) '
-        insert_value=(args)
-        self.cur.execute(self.command,insert_value)
+        self.insert_value=(args)
+        self.cur.execute(self.command,self.insert_value)
         print("basari ile insert yapildi..")
         
         self.Query_close()
-   
+
     
+        
+    def Insert_tbl3(self,tble_name,*args):
+        self.command = f'INSERT INTO {tble_name} (employee_id , password) VALUES(%s,%s) '
+        self.insert3_value=(args)
+        self.cur.execute(self.command,self.insert3_value)
+        print('basari ile insert yapildi..')
+   
+        self.Query_close()
     
     def Update_tbl(self,tbl_name,*vl,**kwargs):
         for key,value in kwargs.items():
@@ -233,6 +250,11 @@ db_Table=ATM_Create()
 # tbl_listem=db.Query_tbl('tblcustomer')
 # for i in tbl_listem:
 #     print(i)
+
+# qr=Query_open()
+# qr.Insert_tbl3('tblemployee',3,'1234' )
+# qr=Query_open()
+# qr.Insert_tbl3('tblemployee',4,'1234' )
 
 # db= Query_open()
 # tbl_listem=db.Query_tbl_1('password','tblcustomer')
@@ -265,3 +287,9 @@ db_Table=ATM_Create()
 # tbl_create = db. Query_tbl_1('create_date', 'tblcustomer')
 # for  cr in tbl_create:
 #     print(cr)
+
+# db.command = f'INSERT INTO tblaccountaktivities (activities_id,withdraw_money,insert_money,transfer_money,balance) VALUES(3,50,100,200,11111) '
+
+# db.cur.execute(db.command)
+
+# db.Query_close()
