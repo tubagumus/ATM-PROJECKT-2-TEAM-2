@@ -15,7 +15,7 @@ from Ui_withdraw import Ui_withdrawScreen
 from Ui_Change_customer_datails import Ui_MainWindow2
 from Ui_transfer import Ui_transfer
 from Ui_admin_choice import Ui_MainWindow1
-from Ui_See_bank_details import Ui_MainWindow
+from Ui_See_bank_details import Ui_MainWindow3
 
 from Ui_login import Ui_loginScreen
 from ui_loginAdmin import Ui_loginAdmin   # for admin
@@ -232,7 +232,7 @@ class Editpage(QMainWindow):
     def __init__(self):
         super().__init__()
 
-        self.editinfo = Ui_MainWindow()
+        self.editinfo = Ui_MainWindow3()
         self.editinfo.setupUi(self)
         self.editinfo.return2_button.clicked.connect(self.donus)
 
