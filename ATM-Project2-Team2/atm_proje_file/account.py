@@ -562,8 +562,8 @@ class Changepage(QMainWindow):
         # db.cur.execute(f'UPDATE tblcustomer SET first_name = {self.changeform.insert_edit.text()}  WHERE customer_id = {int(self.changeform.edit_id.text())}')
         # db.cur.execute(f'UPDATE tblcustomer SET last_name ={self.changeform.insert_edit_2.text()}  WHERE customer_id = {int(self.changeform.edit_id.text())}')
         # db.cur.execute(f'UPDATE tblcustomer SET email ={self.changeform.insert_edit_3.text()}  WHERE customer_id = {int(self.changeform.edit_id.text())}')
-        # db.cur.execute(f'UPDATE tblcustomer SET password ={self.changeform.insert_edit_5.text()}  WHERE customer_id = {self.changeform.edit_id.text()}')
-        
+        # # db.cur.execute(f'UPDATE tblcustomer SET password ={self.changeform.insert_edit_5.text()}  WHERE customer_id = {self.changeform.edit_id.text()}')
+        # db.Query_close()
         pass
     
     def return_admin_choice(self):
@@ -584,9 +584,34 @@ class Activitypage(QMainWindow):
         db = Query_open()
         db.cur.execute(f'SELECT balance FROM tblcustomer ')
         result =db.cur.fetchall()
+        db.Query_close()
+        total_money = 0
 
+        for i in range(len(result)):
+            total_money += result[i][0]
+        self.activityform.lbl_total_money_show.setText(f'   {total_money} $')
+
+
+        a=0
+     
+        db = Query_open()
         
-
+        db.cur.execute(f'SELECT insert_money  FROM tblaccountaktivities where insert_money > 0')
+        result =db.cur.fetchall()
+        for i in range(len(result)):
+            a = a + result[i][0] 
+        self.activityform.lbl_total_insert_show.setText(f'   {a} $') 
+        
+        b=0
+     
+        db = Query_open()
+        
+        db.cur.execute(f'SELECT withdraw_money  FROM tblaccountaktivities where withdraw_money > 0')
+        result =db.cur.fetchall()
+        for i in range(len(result)):
+            b = b + result[i][0] 
+        self.activityform.lbl_total_withdraw_show.setText(f'   {b} $') 
+        
 
 
 

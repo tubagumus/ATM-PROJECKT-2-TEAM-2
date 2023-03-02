@@ -26,7 +26,7 @@ class Ui_MainWindow1(object):
         icon.addPixmap(QtGui.QPixmap(os.path.join(__location__, "reply.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         icon.addPixmap(QtGui.QPixmap(os.path.join(__location__, "reply.png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.return2_button.setIcon(icon)
-        self.return2_button.setIconSize(QtCore.QSize(50, 50))
+        self.return2_button.setIconSize(QtCore.QSize(30, 30))
         self.return2_button.setObjectName("return2_button")
         self.btn_register = QtWidgets.QPushButton(self.centralwidget)
         self.btn_register.setGeometry(QtCore.QRect(90, 40, 141, 51))
