@@ -235,6 +235,7 @@ class Editpage(QMainWindow):
         self.editinfo = Ui_MainWindow2()
         self.editinfo.setupUi(self)
         self.editinfo.return2_button.clicked.connect(self.donus)
+        
 
     def donus(self):
         self.openaccountpage = AccountPage()
@@ -535,6 +536,23 @@ class Changepage(QMainWindow):
         self.changeform = Ui_MainWindow2()
         self.changeform.setupUi(self)
         self.changeform.return2_button.clicked.connect(self.return_admin_choice)
+        self.changeform.check_button_2.clicked.connect(self.update)
+
+        customer = self.changeform.edit_id.text()
+        db = Query_open()
+        db.cur.execute(f'SELECT * FROM tblcustomer where customer_id = 1')
+        result =db.cur.fetchall()
+    
+        self.changeform.insert_edit.setText(result[0][1])
+        self.changeform.insert_edit_2.setText(result[0][2])
+        self.changeform.insert_edit_3.setText(result[0][3])
+        self.changeform.insert_edit_5.setText(str(result[0][4]))
+       
+        db.Query_close()
+        # for i in range (len(result)):
+        self.changeform.edit_id.setText(str(result[0][0]))
+    def update(self):
+        pass
     
     def return_admin_choice(self):
         self.choiceform = Choicepage()
@@ -578,11 +596,20 @@ class AccounAdminPage(QWidget):
 
 
     def write_db(self):  # bu aşamada database yazılıyr
-
         
+        while True:
+            customer_id = randint(100000, 999999)
+            qr=Query_open()
+            qr.cur.execute('select customer_id from tblcustomer')
+            result = qr.cur.fetchall()
+            for i in range (len(result)):
+                if result[i][0] == customer_id:
+                    continue
+                
+            break
+
 
         qr=Query_open()
-        customer_id = randint(100000, 999999)
         qr.Insert_tbl('tblcustomer',customer_id,self.accounderForm.lineEditName.text(),self.accounderForm.lineEditSurname.text(),self.accounderForm.lineEditEmail.text(),self.accounderForm.lineEditPassword.text(),self.accounderForm.lineEditBalans.text()) #attention ! Error if customer_id exists
         print(customer_id)
         
