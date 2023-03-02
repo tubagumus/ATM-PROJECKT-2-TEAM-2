@@ -183,23 +183,23 @@ class Transferpage(QMainWindow):
 
         db = Query_open()
         
-        # db.command= f'UPDATE tblaccountaktivities SET withdraw_money ={new_insert}  WHERE customer_id = {user}'
-        # db.cur.execute(db.command)
-        db.cur.execute(f'SELECT balance FROM tblcustomer where customer_id = {user} ')
+        
+        db.cur.execute(f'SELECT balance FROM tblcustomer where customer_id = {user} ')  # sender balance
         result =db.cur.fetchall()
         new_balance2 = (result[0][0]) - int(self.transfer_money.edit_transfer_amount.text())
-        db.cur.execute(f'UPDATE tblcustomer SET balance ={new_balance2}  WHERE customer_id = {user}')
-        db.cur.execute(f'INSERT INTO tblaccountaktivities (customer_id,balance,transfer_money) VALUES({user},{new_balance2},{int(self.transfer_money.edit_transfer_amount.text())}) ')
-        
-        db.cur.execute(f'SELECT balance FROM tblcustomer where customer_id = {self.transfer_money.edit_customer_id.text()} ')
+        db.cur.execute(f'UPDATE tblcustomer SET balance ={new_balance2}  WHERE customer_id = {user}')   # withdraw from sender(user)
+        db.cur.execute(f'INSERT INTO tblaccountaktivities (customer_id,balance,transfer_money) VALUES({user},{new_balance2},{int(self.transfer_money.edit_transfer_amount.text())}) ')  # transfer log record
+        global transfer_to
+        transfer_to = self.transfer_money.edit_customer_id.text()
+        db.cur.execute(f'SELECT balance FROM tblcustomer where customer_id = {self.transfer_money.edit_customer_id.text()} ')   # receipent balance
         result =db.cur.fetchall()
         new_balance3 = (result[0][0]) + int(self.transfer_money.edit_transfer_amount.text())
-        db.cur.execute(f'UPDATE tblcustomer SET balance ={new_balance3}  WHERE customer_id = {self.transfer_money.edit_customer_id.text()}')
+        db.cur.execute(f'UPDATE tblcustomer SET balance ={new_balance3}  WHERE customer_id = {self.transfer_money.edit_customer_id.text()}')    #inserting to the receiver
         
         db.Query_close()
-
+    # updating balance on label
+       
         db = Query_open()
-        
         db.command = f'SELECT balance FROM tblcustomer where customer_id = {user} '
         db.cur.execute(db.command)
         result =db.cur.fetchall()
@@ -210,13 +210,15 @@ class Transferpage(QMainWindow):
         self.transfer_money.btn_transfer.clicked.connect(self.transfer)
 
     def check_id(self):
+        # ID 
         db = Query_open()
-        
         db.command = f'SELECT first_name, last_name FROM tblcustomer where customer_id = {self.transfer_money.edit_customer_id.text()} '
         db.cur.execute(db.command)
         result =db.cur.fetchall()
         db.Query_close()
         self.transfer_money.lbl_customer_name.setText(str(result[0][0])+" "+str(result[0][1]))
+        global customer_name
+        customer_name = str(result[0][0])+" "+str(result[0][1])
         
 
         pass
@@ -398,15 +400,32 @@ class StatementPage(LoginPage,QMainWindow):
         self.statement_user.textBrowser.hide()
         self.statement_user.textBrowser_2.hide()
 
+        a=""
+     
         db = Query_open()
-        tbl_log = db.Query_tbl_1('login_log','tblcustomer')
-        for log in tbl_log:
-            print(log)
         
-        tbl_balance = db.Query_tbl_1('balance', 'tblcustomer')
-        for b in tbl_balance:
-            
-            print(b) 
+        db.cur.execute(f'SELECT insert_money  FROM tblaccountaktivities where (customer_id = {user}) and (insert_money > 0)')
+        result =db.cur.fetchall()
+        for i in range(len(result)):
+            a = a + f'You have inserted {result[i]} $\n' 
+        self.statement_user.textBrowser_2.setText(a) 
+        
+        db.cur.execute(f'SELECT withdraw_money  FROM tblaccountaktivities where (customer_id = {user}) and (withdraw_money > 0)')
+        result =db.cur.fetchall()
+        for i in range(len(result)):
+            a = a + f'You have withdrawed {result[i]} $\n' 
+        self.statement_user.textBrowser_2.setText(a) 
+
+        db.cur.execute(f'SELECT transfer_money  FROM tblaccountaktivities where (customer_id = {user}) and (transfer_money > 0)')
+        # db.cur.execute(f'SELECT login_log  FROM tblaccountaktivities where (customer_id = {user}')
+        result =db.cur.fetchall()
+        
+        for i in range(len(result)):
+            a = a + f'You have transferred {result[i]} $ to customer {transfer_to} {customer_name}\n' 
+        self.statement_user.textBrowser_2.setText(a)
+        
+
+        
         
         # with open(os.path.join(__location__, 'data2.json')) as f:
         #     self.data = json.load(f)
