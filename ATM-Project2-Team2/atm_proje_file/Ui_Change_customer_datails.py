@@ -93,7 +93,7 @@ class Ui_MainWindow2(object):
         self.balance_label_5.setAlignment(QtCore.Qt.AlignCenter)
         self.balance_label_5.setObjectName("balance_label_5")
         self.check_button_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.check_button_2.setGeometry(QtCore.QRect(430, 55, 171, 71))
+        self.check_button_2.setGeometry(QtCore.QRect(430, 55, 111, 71))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.check_button_2.setFont(font)
