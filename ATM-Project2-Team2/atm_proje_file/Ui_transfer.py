@@ -9,7 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import os
+__location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 class Ui_transfer(object):
     def setupUi(self, transfer):
@@ -93,8 +95,8 @@ class Ui_transfer(object):
         self.btn_check_id.setGeometry(QtCore.QRect(510, 70, 41, 31))
         self.btn_check_id.setStyleSheet("background-color: rgb(254, 204, 102);")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("c:\\Users\\yunus\\OneDrive\\Desktop\\pythonogreniyorum\\ATM-Project\\atmproject - Version-2\\atm_proje_file\\../pythonogreniyorum/ATM-Project/atmproject/gümüst/icons/reply.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap("c:\\Users\\yunus\\OneDrive\\Desktop\\pythonogreniyorum\\ATM-Project\\atmproject - Version-2\\atm_proje_file\\../pythonogreniyorum/ATM-Project/gümüst/icons/icns/reply.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(os.path.join(__location__, "reply.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(os.path.join(__location__, "reply.png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.btn_check_id.setIcon(icon)
         self.btn_check_id.setIconSize(QtCore.QSize(50, 50))
         self.btn_check_id.setObjectName("btn_check_id")

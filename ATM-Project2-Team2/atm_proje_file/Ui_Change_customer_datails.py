@@ -9,7 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import os
+__location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 class Ui_MainWindow2(object):
     def setupUi(self, MainWindow):
@@ -128,8 +130,8 @@ class Ui_MainWindow2(object):
         self.return2_button.setGeometry(QtCore.QRect(430, 240, 111, 71))
         self.return2_button.setStyleSheet("background-color: rgb(254, 204, 102);")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("c:\\Users\\yunus\\OneDrive\\Desktop\\pythonogreniyorum\\ATM-Project\\atmproject - Version-2\\atm_proje_file\\../pythonogreniyorum/ATM-Project/atmproject/gümüst/icons/reply.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap("c:\\Users\\yunus\\OneDrive\\Desktop\\pythonogreniyorum\\ATM-Project\\atmproject - Version-2\\atm_proje_file\\../pythonogreniyorum/ATM-Project/gümüst/icons/icns/reply.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(os.path.join(__location__, "reply.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(os.path.join(__location__, "reply.png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.return2_button.setIcon(icon)
         self.return2_button.setIconSize(QtCore.QSize(50, 50))
         self.return2_button.setObjectName("return2_button")

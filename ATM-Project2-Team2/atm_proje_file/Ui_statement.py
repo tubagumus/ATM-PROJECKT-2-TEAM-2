@@ -9,7 +9,9 @@
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
-
+import os
+__location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
 
 class Ui_statementScreen(object):
     def setupUi(self, statementScreen):
@@ -37,8 +39,8 @@ class Ui_statementScreen(object):
         self.return4_button.setGeometry(QtCore.QRect(350, 500, 171, 41))
         self.return4_button.setStyleSheet("background-color: rgb(254, 204, 102);")
         icon = QtGui.QIcon()
-        icon.addPixmap(QtGui.QPixmap("c:\\Users\\yunus\\OneDrive\\Desktop\\pythonogreniyorum\\ATM-Project\\atmproject - Version-2\\atm_proje_file\\../pythonogreniyorum/ATM-Project/atmproject/gümüst/icons/reply.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
-        icon.addPixmap(QtGui.QPixmap("c:\\Users\\yunus\\OneDrive\\Desktop\\pythonogreniyorum\\ATM-Project\\atmproject - Version-2\\atm_proje_file\\../pythonogreniyorum/ATM-Project/gümüst/icons/icns/reply.png"), QtGui.QIcon.Normal, QtGui.QIcon.On)
+        icon.addPixmap(QtGui.QPixmap(os.path.join(__location__, "reply.png")), QtGui.QIcon.Normal, QtGui.QIcon.Off)
+        icon.addPixmap(QtGui.QPixmap(os.path.join(__location__, "reply.png")), QtGui.QIcon.Normal, QtGui.QIcon.On)
         self.return4_button.setIcon(icon)
         self.return4_button.setIconSize(QtCore.QSize(50, 50))
         self.return4_button.setObjectName("return4_button")

@@ -10,7 +10,9 @@
 
 from PyQt5 import QtCore, QtGui, QtWidgets
 
-
+import os
+__location__ = os.path.realpath(
+        os.path.join(os.getcwd(), os.path.dirname(__file__)))
 class Ui_loginAdmin(object):
     def setupUi(self, Login):
         Login.setObjectName("Login")
