@@ -538,7 +538,7 @@ class Changepage(QMainWindow):
         self.changeform.return2_button.clicked.connect(self.return_admin_choice)
         self.changeform.check_button_2.clicked.connect(self.update)
 
-        customer = self.changeform.edit_id.text()
+        
         db = Query_open()
         db.cur.execute(f'SELECT * FROM tblcustomer where customer_id = 1')
         result =db.cur.fetchall()
@@ -546,12 +546,24 @@ class Changepage(QMainWindow):
         self.changeform.insert_edit.setText(result[0][1])
         self.changeform.insert_edit_2.setText(result[0][2])
         self.changeform.insert_edit_3.setText(result[0][3])
-        self.changeform.insert_edit_5.setText(str(result[0][4]))
+        # self.changeform.insert_edit_5.setText(str(result[0][4]))
+
+
        
         db.Query_close()
         # for i in range (len(result)):
         self.changeform.edit_id.setText(str(result[0][0]))
+
+        
     def update(self):
+        
+        # db = Query_open()
+        
+        # db.cur.execute(f'UPDATE tblcustomer SET first_name = {self.changeform.insert_edit.text()}  WHERE customer_id = {int(self.changeform.edit_id.text())}')
+        # db.cur.execute(f'UPDATE tblcustomer SET last_name ={self.changeform.insert_edit_2.text()}  WHERE customer_id = {int(self.changeform.edit_id.text())}')
+        # db.cur.execute(f'UPDATE tblcustomer SET email ={self.changeform.insert_edit_3.text()}  WHERE customer_id = {int(self.changeform.edit_id.text())}')
+        # db.cur.execute(f'UPDATE tblcustomer SET password ={self.changeform.insert_edit_5.text()}  WHERE customer_id = {self.changeform.edit_id.text()}')
+        
         pass
     
     def return_admin_choice(self):
@@ -568,6 +580,15 @@ class Activitypage(QMainWindow):
         self.activityform = Ui_MainWindow4()
         self.activityform.setupUi(self)
         self.activityform.return2_button.clicked.connect(self.returnLoginAdmin)
+
+        db = Query_open()
+        db.cur.execute(f'SELECT balance FROM tblcustomer ')
+        result =db.cur.fetchall()
+
+        
+
+
+
 
     def returnLoginAdmin(self):
         self.choiceform = Choicepage()
