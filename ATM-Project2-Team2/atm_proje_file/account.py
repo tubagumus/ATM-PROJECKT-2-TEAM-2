@@ -427,18 +427,7 @@ class StatementPage(LoginPage,QMainWindow):
 
         
         
-        # with open(os.path.join(__location__, 'data2.json')) as f:
-        #     self.data = json.load(f)
-        #     a = ''
-        #     b = ''
-        #     for i in self.data["customers"][int(user)-1]["login_log"]:
-        #         a += f"{i} \n"
-        #     self.statement_user.logins_label.setText(a)
-        #     self.statement_user.date_label.setText(self.data["customers"][int(user)-1]["register_log"])
-        #     for i in self.data["customers"][int(user)-1]["money_activities"]:
-        #         b += f"{i} \n"
-        #     self.statement_user.aktivites_label.setText(b)
-        #     # self.statement_user.check_label.setText(str(self.data["customers"][int(user)-1]["balance"])+" $")
+
             
 
     def donus(self):
@@ -451,7 +440,7 @@ class StatementPage(LoginPage,QMainWindow):
 # Admin Screen
 
 class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (QWidget) sinifin alt sinifi yapiyoruz.
-    def __init__(self) -> None:  
+    def __init__(self) :  
         super().__init__()
         self.loginForm= Ui_loginAdmin()      #bu ve alttaki kod ile nesne yaratip sonra ana modulunu(self ile) cagiriyoruz.
         self.loginForm.setupUi(self)
@@ -540,7 +529,7 @@ from Ui_Change_customer_datails import Ui_MainWindow2
 
 
 class Changepage(QMainWindow):
-    def __init__(self) -> None:
+    def __init__(self) :
         super().__init__()
 
         self.changeform = Ui_MainWindow2()
@@ -558,7 +547,7 @@ class Changepage(QMainWindow):
 class Activitypage(QMainWindow):
     def __init__(self) :
         super().__init__()
-        self.activityform = Ui_MainWindow()
+        self.activityform = Ui_MainWindow3()
         self.activityform.setupUi(self)
         self.activityform.return2_button.clicked.connect(self.returnLoginAdmin)
 
