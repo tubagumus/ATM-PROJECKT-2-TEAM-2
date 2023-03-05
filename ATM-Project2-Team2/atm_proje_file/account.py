@@ -235,6 +235,13 @@ class Editpage(QMainWindow):
         self.editinfo = Ui_MainWindow2()
         self.editinfo.setupUi(self)
         self.editinfo.return2_button.clicked.connect(self.donus)
+
+        db = Query_open()
+        db.command = f'SELECT customer_id FROM tblcustomer where customer_id = {user} '
+        db.cur.execute(db.command)
+        result =db.cur.fetchall()
+        db.Query_close()
+        self.editinfo.edit_id.setText(str(user))
         
 
     def donus(self):
@@ -539,20 +546,20 @@ class Changepage(QMainWindow):
         self.changeform.check_button_2.clicked.connect(self.update)
 
         
-        db = Query_open()
-        db.cur.execute(f'SELECT * FROM tblcustomer where customer_id = 1')
-        result =db.cur.fetchall()
+        # db = Query_open()
+        # db.cur.execute(f'SELECT * FROM tblcustomer where customer_id = 1')
+        # result =db.cur.fetchall()
     
-        self.changeform.insert_edit.setText(result[0][1])
-        self.changeform.insert_edit_2.setText(result[0][2])
-        self.changeform.insert_edit_3.setText(result[0][3])
-        # self.changeform.insert_edit_5.setText(str(result[0][4]))
+        # self.changeform.insert_edit.setText(result[0][1])
+        # self.changeform.insert_edit_2.setText(result[0][2])
+        # self.changeform.insert_edit_3.setText(result[0][3])
+        # # self.changeform.insert_edit_5.setText(str(result[0][4]))
 
 
        
-        db.Query_close()
-        # for i in range (len(result)):
-        self.changeform.edit_id.setText(str(result[0][0]))
+        # db.Query_close()
+        # # for i in range (len(result)):
+        # self.changeform.edit_id.setText(str(result[0][0]))
 
         
     def update(self):
