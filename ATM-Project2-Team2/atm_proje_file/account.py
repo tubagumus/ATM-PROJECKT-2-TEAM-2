@@ -235,6 +235,8 @@ class Editpage(QMainWindow):
         self.editinfo = Ui_MainWindow2()
         self.editinfo.setupUi(self)
         self.editinfo.return2_button.clicked.connect(self.donus)
+        self.editinfo.check_button_2.clicked.connect(self.update_info)
+
 
         db = Query_open()
         db.command = f'SELECT customer_id FROM tblcustomer where customer_id = {user} '
@@ -242,6 +244,11 @@ class Editpage(QMainWindow):
         result =db.cur.fetchall()
         db.Query_close()
         self.editinfo.edit_id.setText(str(user))
+
+    def update_info(self):
+        db = Query_open()
+        db.cur.execute('UPDATE tblcustomer SET first_name = %s, last_name = %s, email = %s where customer_id = %s ', ( self.editinfo.insert_edit.text(),self.editinfo.insert_edit_2.text(), self.editinfo.insert_edit_3.text() ,int(user)))
+        db.Query_close()  
         
 
     def donus(self):
@@ -545,33 +552,15 @@ class Changepage(QMainWindow):
         self.changeform.return2_button.clicked.connect(self.return_admin_choice)
         self.changeform.check_button_2.clicked.connect(self.update)
 
-        
-        # db = Query_open()
-        # db.cur.execute(f'SELECT * FROM tblcustomer where customer_id = 1')
-        # result =db.cur.fetchall()
-    
-        # self.changeform.insert_edit.setText(result[0][1])
-        # self.changeform.insert_edit_2.setText(result[0][2])
-        # self.changeform.insert_edit_3.setText(result[0][3])
-        # # self.changeform.insert_edit_5.setText(str(result[0][4]))
-
-
-       
-        # db.Query_close()
-        # # for i in range (len(result)):
-        # self.changeform.edit_id.setText(str(result[0][0]))
-
-        
     def update(self):
+    
+
+        db = Query_open()
+        db.cur.execute('UPDATE tblcustomer SET first_name = %s, last_name = %s, email = %s where customer_id = %s ', ( self.changeform.insert_edit.text(),self.changeform.insert_edit_2.text(), self.changeform.insert_edit_3.text() ,int(self.changeform.edit_id.text())))
+        db.Query_close()
+
         
-        # db = Query_open()
-        
-        # db.cur.execute(f'UPDATE tblcustomer SET first_name = {self.changeform.insert_edit.text()}  WHERE customer_id = {int(self.changeform.edit_id.text())}')
-        # db.cur.execute(f'UPDATE tblcustomer SET last_name ={self.changeform.insert_edit_2.text()}  WHERE customer_id = {int(self.changeform.edit_id.text())}')
-        # db.cur.execute(f'UPDATE tblcustomer SET email ={self.changeform.insert_edit_3.text()}  WHERE customer_id = {int(self.changeform.edit_id.text())}')
-        # # db.cur.execute(f'UPDATE tblcustomer SET password ={self.changeform.insert_edit_5.text()}  WHERE customer_id = {self.changeform.edit_id.text()}')
-        # db.Query_close()
-        pass
+    
     
     def return_admin_choice(self):
         self.choiceform = Choicepage()
