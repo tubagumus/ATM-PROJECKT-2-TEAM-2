@@ -460,7 +460,7 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
         self.loginForm= Ui_loginAdmin()      #bu ve alttaki kod ile nesne yaratip sonra ana modulunu(self ile) cagiriyoruz.
         self.loginForm.setupUi(self)
         self.loginForm.labelErrorMessage.hide()
-        self.loginForm.pushButtonLogin.clicked.connect(self.choice_menu)
+        # self.loginForm.pushButtonLogin.clicked.connect(self.choice_menu)
         self.loginForm.pushButtonLogin.clicked.connect(self.AccountAdminOpen) # login tiklanirsa AccountOpen modulunu calistiracak.
         self.loginForm.pushButtonLogin2.clicked.connect(self.go_customer_login)
 
@@ -488,12 +488,15 @@ class LoginAdminPage(QWidget):  # klas olusturdugumuzda bunu QT designer daki (Q
             db= Query_open()
             pass_listm=db.Query_tbl_1('password', 'tblemployee')
             for i in range(len(user_listm)):
-                if user_listm[i][0] == self.user_password and pass_listm[i][0]== self.user_password:
-                    self.accountForm= AccounAdminPage()
-                    self.close()   
-                    self.accountForm.show()
+                if user_listm[i][0] == self.user_id and pass_listm[i][0]== self.user_password:
+                    print(self.user_id)
+                    print(self.user_password)
+                    self.choiceform = Choicepage()
+                    self.close()
+                    self.choiceform.show()
+
                 
-                    self.hide()
+                    
                 else :
                     self.loginForm.labelErrorMessage.setText(" User Name or  User Password is incorrect! Try Again ")
                     self.loginForm.labelErrorMessage.show()

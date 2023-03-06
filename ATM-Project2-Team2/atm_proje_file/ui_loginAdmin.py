@@ -90,11 +90,11 @@ class Ui_loginAdmin(object):
         self.labelUserPassword.setText(_translate("Login", "User Password :"))
         self.pushButtonLogin2.setText(_translate("Login", "Return"))
 
-if __name__ == "__main__":
-    import sys
-    app = QtWidgets.QApplication(sys.argv)
-    Login = QtWidgets.QWidget()
-    ui = Ui_loginAdmin()
-    ui.setupUi(Login)
-    Login.show()
-    sys.exit(app.exec_())
+# if __name__ == "__main__":
+#     import sys
+#     app = QtWidgets.QApplication(sys.argv)
+#     Login = QtWidgets.QWidget()
+#     ui = Ui_loginAdmin()
+#     ui.setupUi(Login)
+#     Login.show()
+#     sys.exit(app.exec_())
