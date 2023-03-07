@@ -415,6 +415,7 @@ class StatementPage(LoginPage,QMainWindow):
         self.statement_user.textBrowser.hide()
         self.statement_user.textBrowser_2.hide()
         self.statement_user.date_label.hide()
+        self.statement_user.logins_button.clicked.connect(self.write_login_log)
         self.statement_user.date_button.clicked.connect(self.write_create)
 
         a=""
@@ -440,6 +441,14 @@ class StatementPage(LoginPage,QMainWindow):
         for i in range(len(result)):
             a = a + f'You have transferred {result[i]} $ to customer {transfer_to} {customer_name}\n' 
         self.statement_user.textBrowser_2.setText(a)
+
+    def write_login_log(self) :
+        db = Query_open()
+        db.command = f'SELECT login_log FROM tblaccountaktivities where customer_id = {user} '
+        db.cur.execute(db.command)
+        result =db.cur.fetchall()
+        self.statement_user.textBrowser.setText(str(result[0][0]))
+        self.statement_user.textBrowser.show   
         
     def write_create(self):
             
