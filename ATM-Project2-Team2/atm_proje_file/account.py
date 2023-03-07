@@ -26,7 +26,6 @@ import time
 
 from Query_db import*
 
-import json
 import os
 
 __location__ = os.path.realpath(
@@ -82,8 +81,6 @@ class LoginPage(QMainWindow):
             for i in range(len(tbl_listem)):
                 
                 if (tbl_listem[i][0]) == self.password and (tbl_list[i][0]== self.id):
-                    # db= Query_open()
-                    # db.cur.execute(f'INSERT INTO tblaccountaktivities (customer_id) VALUES({user})')
                     self.hide()
                     self.openaccountpage.show()
                 else :
@@ -314,16 +311,11 @@ class InsertPage(LoginPage,QMainWindow):
 
 
             db = Query_open()
-            
-           
-            # db.command= f'UPDATE tblaccountaktivities SET insert_money ={int(self.insert_money.insert_edit.text())}  WHERE customer_id = {user}'
-            
-            # db.cur.execute(db.command)
+          
             new_balance = int(self.insert_money.insert_edit.text())+ (result[0][0])
             db.cur.execute(f'INSERT INTO tblaccountaktivities (customer_id,balance,insert_money) VALUES({user},{new_balance},{int(self.insert_money.insert_edit.text())}) ')
             
             db.cur.execute(f'UPDATE tblcustomer SET balance ={new_balance}  WHERE customer_id = {user}')
-            # db.cur.execute(f'UPDATE tblaccountaktivities SET balance ={new_balance}  WHERE customer_id = {user}')
             
             
             db.Query_close()
@@ -382,8 +374,7 @@ class WithdrawPage(LoginPage,QMainWindow):
 
             db = Query_open()
             new_insert = int(self.withdraw_money.withdraw_edit.text())
-            # db.command= f'UPDATE tblaccountaktivities SET withdraw_money ={new_insert}  WHERE customer_id = {user}'
-            # db.cur.execute(db.command)
+           
             new_balance2 = (result[0][0]) - int(self.withdraw_money.withdraw_edit.text())
             db.command= f'UPDATE tblcustomer SET balance ={new_balance2}  WHERE customer_id = {user}'
             db.cur.execute(db.command)
@@ -644,7 +635,7 @@ class AccounAdminPage(QWidget):
         self.accounderForm.setupUi(self)
         self.accounderForm.pushButtonReturn.clicked.connect(self.return_admin_choice)
         self.accounderForm.pushButtonSuffix.clicked.connect(self.write_db)
-        # self.accounderForm.pushButtonSuffix.clicked.connect(self.accoundCread)
+        
         self.accounderForm.label.hide()
 
 
